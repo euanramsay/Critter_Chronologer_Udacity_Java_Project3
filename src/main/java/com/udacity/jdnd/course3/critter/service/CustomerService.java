@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +20,9 @@ public class CustomerService {
     @Autowired
     private PetRepository petRepository;
 
-    public Optional<Customer> findById(long id) {
-        return customerRepository.findById(id);
+    public Customer findById(long id) {
+        return customerRepository.findById(id).orElseThrow
+                (() -> new RuntimeException(String.format("Customer with id %s does not exist in customer table", id)));
     }
 
     public List<Customer> findAllCustomers() {
