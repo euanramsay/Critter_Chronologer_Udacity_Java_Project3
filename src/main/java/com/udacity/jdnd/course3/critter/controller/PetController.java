@@ -41,13 +41,19 @@ public class PetController {
     @GetMapping
     public List<PetDTO> getPets(){
         List<Pet> pets = petService.findAllPets();
-        return pets.stream().map(this::convertPetEntityToPetDTO).collect(Collectors.toList());
+        return pets
+                .stream()
+                .map(this::convertPetEntityToPetDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
         List<Pet> pets = petService.findPetsByCustomerId(ownerId);
-        return pets.stream().map(this::convertPetEntityToPetDTO).collect(Collectors.toList());
+        return pets
+                .stream()
+                .map(this::convertPetEntityToPetDTO)
+                .collect(Collectors.toList());
     }
 
     private PetDTO convertPetEntityToPetDTO(Pet pet) {

@@ -54,7 +54,10 @@ public class UserController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerService.findAllCustomers();
-        return customers.stream().map(this::convertCustomerEntityToCustomerDTO).collect(Collectors.toList());
+        return customers
+                .stream()
+                .map(this::convertCustomerEntityToCustomerDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
@@ -84,13 +87,19 @@ public class UserController {
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         List<Employee> employees = employeeService.findAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills());
-        return employees.stream().map(this::convertEmployeeEntityToEmployeeDTO).collect(Collectors.toList());
+        return employees
+                .stream()
+                .map(this::convertEmployeeEntityToEmployeeDTO)
+                .collect(Collectors.toList());
     }
 
     private CustomerDTO convertCustomerEntityToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
-        List<Long> petIds = customer.getPets().stream().map(Pet::getId).collect(Collectors.toList());
+        List<Long> petIds = customer.getPets()
+                .stream()
+                .map(Pet::getId)
+                .collect(Collectors.toList());
         customerDTO.setPetIds(petIds);
         return customerDTO;
     }
@@ -101,7 +110,10 @@ public class UserController {
         List<Long> petIds = customerDTO.getPetIds();
         List<Pet> customerPets;
         if (petIds != null && !petIds.isEmpty()) {
-            customerPets = petIds.stream().map(petId -> petService.findPetById(petId)).collect(Collectors.toList());
+            customerPets = petIds
+                    .stream()
+                    .map(petId -> petService.findPetById(petId))
+                    .collect(Collectors.toList());
         } else {
             customerPets = Collections.emptyList();
         }

@@ -27,7 +27,8 @@ public class EmployeeService {
 
     public List<Employee> findAvailableEmployees(LocalDate date, Set<EmployeeSkill> skills) {
         List<Employee> employees = employeeRepository
-                .findAllByDaysAvailableContains(date.getDayOfWeek()).stream()
+                .findAllByDaysAvailableContains(date.getDayOfWeek())
+                .stream()
                 .filter((employee -> employee.getSkills().containsAll(skills)))
                 .collect(Collectors.toList());
         return employees;
