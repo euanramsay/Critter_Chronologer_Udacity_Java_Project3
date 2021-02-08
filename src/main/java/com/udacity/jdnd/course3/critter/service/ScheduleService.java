@@ -16,34 +16,34 @@ import java.util.List;
 public class ScheduleService {
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    ScheduleRepository scheduleRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
-    private PetRepository petRepository;
+    PetRepository petRepository;
 
     @Autowired
-    private EmployeeService employeeService;
+    EmployeeService employeeService;
 
     @Autowired
-    private PetService petService;
+    PetService petService;
 
     @Autowired
-    private CustomerService customerService;
+    CustomerService customerService;
 
     public List<Schedule> findAllSchedules() {
         return scheduleRepository.findAll();
     }
 
     public List<Schedule> findScheduleForPet(long petId) {
-        Pet pet = petService.getPetById(petId);
+        Pet pet = petService.findPetById(petId);
         return scheduleRepository.getAllByPets(pet);
     }
 
     public List<Schedule> findAllSchedulesForEmployee(long employeeId) {
-        Employee employee = employeeService.getEmployeeById(employeeId);
+        Employee employee = employeeService.findEmployeeById(employeeId);
         return scheduleRepository.getAllByEmployeesContains(employee);
     }
 

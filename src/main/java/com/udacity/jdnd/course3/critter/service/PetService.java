@@ -20,25 +20,24 @@ public class PetService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public List<Pet> getAllPets() {
+    public List<Pet> findAllPets() {
         return petRepository.findAll();
     }
 
-    public Pet getPetById(long id) {
+    public Pet findPetById(long id) {
         return petRepository.findById(id).orElseThrow
                 (() -> new RuntimeException(String.format("Pet with id %s does not exist in pet table", id)));
     }
 
-    public List<Pet> getPetsByCustomerId(Long customerId) {
+    public List<Pet> findPetsByCustomerId(Long customerId) {
         return petRepository.getAllByCustomerId(customerId);
     }
 
-    public Pet savePet(Pet pet, long ownerId) {
-        Customer customer = customerRepository.getOne(ownerId);
-        pet.setCustomer(customer);
-        Pet savedPet = petRepository.save(pet);
-        customer.addPet(savedPet);
-        customerRepository.save(customer);
-        return savedPet;
+    public Pet savePet(Pet pet) {
+        Customer owner = pet.getCustomer();
+        petRepository.save(pet);
+        owner.addPet(pet);
+        customerRepository.save(owner);
+        return pet;
     }
 }

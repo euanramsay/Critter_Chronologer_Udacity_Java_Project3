@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class CustomerService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    private PetRepository petRepository;
+    PetRepository petRepository;
 
     public Customer findById(long id) {
         return customerRepository.findById(id).orElseThrow

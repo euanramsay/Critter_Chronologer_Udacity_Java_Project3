@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
     @Autowired
     EmployeeService employeeService;
@@ -39,19 +39,19 @@ public class UserController {
         customer.setName(customerDTO.getName());
         customer.setPhoneNumber(customerDTO.getPhoneNumber());
         customer.setNotes(customerDTO.getNotes());
-        List<Long> petIds =customerDTO.getPetIds();
-        return  convertCustomerDTOToEntity(customerService.saveCustomer(customer, petIds));
+        List<Long> petIds = customerDTO.getPetIds();
+        return  convertCustomerEntityToCustomerDTO(customerService.saveCustomer(customer, petIds));
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
         List<Customer> customers = customerService.findAllCustomers();
-        return customers.stream().map(UserController::convertCustomerDTOToEntity).collect(Collectors.toList());
+        return customers.stream().map(UserController::convertCustomerEntityToCustomerDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        return convertCustomerDTOToEntity(customerService.findCustomerByPetId(petId));
+        return convertCustomerEntityToCustomerDTO(customerService.findCustomerByPetId(petId));
     }
 
     @PostMapping("/employee")
@@ -60,12 +60,12 @@ public class UserController {
         employee.setName(employeeDTO.getName());
         employee.setSkills(employeeDTO.getSkills());
         employee.setDaysAvailable(employeeDTO.getDaysAvailable());
-        return convertEmployeeDTOToEntity(employeeService.saveEmployee(employee));
+        return convertEmployeeEntityToEmployeeDTO(employeeService.saveEmployee(employee));
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        return convertEmployeeDTOToEntity(employeeService.getEmployeeById(employeeId));
+        return convertEmployeeEntityToEmployeeDTO(employeeService.findEmployeeById(employeeId));
     }
 
     @PutMapping("/employee/{employeeId}")
@@ -75,11 +75,11 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        List<Employee> employees = employeeService.getAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills());
-        return employees.stream().map(UserController::convertEmployeeDTOToEntity).collect(Collectors.toList());
+        List<Employee> employees = employeeService.findAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills());
+        return employees.stream().map(UserController::convertEmployeeEntityToEmployeeDTO).collect(Collectors.toList());
     }
 
-    private static CustomerDTO convertCustomerDTOToEntity(Customer customer) {
+    private static CustomerDTO convertCustomerEntityToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         List<Long> petIds = customer.getPets().stream().map(Pet::getId).collect(Collectors.toList());
@@ -87,7 +87,7 @@ public class UserController {
         return customerDTO;
     }
 
-    private static EmployeeDTO convertEmployeeDTOToEntity(Employee employee) {
+    private static EmployeeDTO convertEmployeeEntityToEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         BeanUtils.copyProperties(employee, employeeDTO);
         return employeeDTO;
