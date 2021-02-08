@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private CustomerService customerService;
+    CustomerService customerService;
 
     @Autowired
     EmployeeService employeeService;
@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
         List<Customer> customers = customerService.findAllCustomers();
-        return customers.stream().map(UserController::convertCustomerEntityToCustomerDTO).collect(Collectors.toList());
+        return customers.stream().map(this::convertCustomerEntityToCustomerDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
@@ -76,10 +76,10 @@ public class UserController {
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         List<Employee> employees = employeeService.findAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills());
-        return employees.stream().map(UserController::convertEmployeeEntityToEmployeeDTO).collect(Collectors.toList());
+        return employees.stream().map(this::convertEmployeeEntityToEmployeeDTO).collect(Collectors.toList());
     }
 
-    private static CustomerDTO convertCustomerEntityToCustomerDTO(Customer customer) {
+    private CustomerDTO convertCustomerEntityToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         List<Long> petIds = customer.getPets().stream().map(Pet::getId).collect(Collectors.toList());
@@ -87,7 +87,7 @@ public class UserController {
         return customerDTO;
     }
 
-    private static EmployeeDTO convertEmployeeEntityToEmployeeDTO(Employee employee) {
+    private EmployeeDTO convertEmployeeEntityToEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         BeanUtils.copyProperties(employee, employeeDTO);
         return employeeDTO;

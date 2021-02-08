@@ -2,7 +2,6 @@ package com.udacity.jdnd.course3.critter.controller;
 
 import com.udacity.jdnd.course3.critter.dto.PetDTO;
 import com.udacity.jdnd.course3.critter.entity.Customer;
-import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.PetService;
@@ -28,8 +27,9 @@ public class PetController {
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        Pet newPet = convertPetDTOToEntity(petDTO);
-        return convertPetEntityToPetDTO(petService.savePet(newPet));
+        Pet newPet = convertPetDTOToPetEntity(petDTO);
+        Pet savedPet = petService.savePet(newPet);
+        return convertPetEntityToPetDTO(savedPet);
     }
 
     @GetMapping("/{petId}")
@@ -56,12 +56,11 @@ public class PetController {
         return petDTO;
     }
 
-    private Pet convertPetDTOToEntity(PetDTO petDTO) {
+    private Pet convertPetDTOToPetEntity(PetDTO petDTO) {
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
         Customer owner = customerService.findById(petDTO.getOwnerId());
         pet.setCustomer(owner);
-        petDTO.setOwnerId(pet.getCustomer().getId());
         return pet;
     }
 }
