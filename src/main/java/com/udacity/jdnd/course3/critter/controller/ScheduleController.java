@@ -37,35 +37,33 @@ public class ScheduleController {
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        throw new UnsupportedOperationException();
+        Schedule newSchedule = convertScheduleDTOToScheduleEntity(scheduleDTO);
+        Schedule savedSchedule = scheduleService.saveSchedule(newSchedule);
+        return convertScheduleEntityToScheduleDTO(savedSchedule);
     }
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
         List<Schedule> schedules = scheduleService.findAllSchedules();
-        return schedules
-                .stream()
-                .map(this::convertScheduleEntityToScheduleDTO)
-                .collect(Collectors.toList());
+        return convertListOfScheduleEntitiesToScheduleDTOs(schedules);
     }
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        List<Schedule> schedules = scheduleService.findScheduleForPet(petId);
-        return schedules
-                .stream()
-                .map(this::convertScheduleEntityToScheduleDTO)
-                .collect(Collectors.toList());
+        List<Schedule> schedules = scheduleService.findAllSchedulesForPet(petId);
+        return convertListOfScheduleEntitiesToScheduleDTOs(schedules);
     }
 
     @GetMapping("/employee/{employeeId}")
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        List<Schedule> schedules = scheduleService.findAllSchedulesForEmployee(employeeId);
+        return convertListOfScheduleEntitiesToScheduleDTOs(schedules);
     }
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        throw new UnsupportedOperationException();
+        List<Schedule> schedules = scheduleService.findAllSchedulesForCustomer(customerId);
+        return convertListOfScheduleEntitiesToScheduleDTOs(schedules);
     }
 
     private ScheduleDTO convertScheduleEntityToScheduleDTO(Schedule schedule) {
@@ -102,5 +100,12 @@ public class ScheduleController {
                 .collect(Collectors.toList());
         schedule.setPets(pets);
         return schedule;
+    }
+
+    private List<ScheduleDTO> convertListOfScheduleEntitiesToScheduleDTOs(List<Schedule> schedules) {
+        return schedules
+                .stream()
+                .map(this::convertScheduleEntityToScheduleDTO)
+                .collect(Collectors.toList());
     }
 }

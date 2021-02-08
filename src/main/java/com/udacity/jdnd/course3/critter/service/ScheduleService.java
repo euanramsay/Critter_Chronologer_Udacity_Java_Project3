@@ -39,7 +39,7 @@ public class ScheduleService {
         return scheduleRepository.findAll();
     }
 
-    public List<Schedule> findScheduleForPet(long petId) {
+    public List<Schedule> findAllSchedulesForPet(long petId) {
         Pet pet = petService.findPetById(petId);
         return scheduleRepository.getAllByPets(pet);
     }
@@ -49,16 +49,12 @@ public class ScheduleService {
         return scheduleRepository.getAllByEmployeesContains(employee);
     }
 
-    public List<Schedule> findScheduleForCustomer(long customerId) {
+    public List<Schedule> findAllSchedulesForCustomer(long customerId) {
         Customer customer = customerService.findById(customerId);
         return scheduleRepository.getAllByPetsIn(customer.getPets());
     }
 
-    public Schedule saveSchedule(Schedule schedule, List<Long> employeeIds, List<Long> petIds) {
-        List<Employee> employees = employeeRepository.findAllById(employeeIds);
-        List<Pet> pets = petRepository.findAllById(petIds);
-        schedule.setEmployees(employees);
-        schedule.setPets(pets);
+    public Schedule saveSchedule(Schedule schedule) {
         return scheduleRepository.save(schedule);
     }
 }
