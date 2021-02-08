@@ -46,8 +46,8 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
-        Customer customer = convertCustomerDTOToCustomerEntity(customerDTO);
-        Customer savedCustomer = customerService.saveCustomer(customer);
+        Customer newCustomer = convertCustomerDTOToCustomerEntity(customerDTO);
+        Customer savedCustomer = customerService.saveCustomer(newCustomer);
         return convertCustomerEntityToCustomerDTO(savedCustomer);
     }
 
@@ -65,8 +65,8 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = convertEmployeeDTOToEmployeeEntity(employeeDTO);
-        Employee savedEmployee = employeeService.saveEmployee(employee);
+        Employee newEmployee = convertEmployeeDTOToEmployeeEntity(employeeDTO);
+        Employee savedEmployee = employeeService.saveEmployee(newEmployee);
         return convertEmployeeEntityToEmployeeDTO(savedEmployee);
     }
 
