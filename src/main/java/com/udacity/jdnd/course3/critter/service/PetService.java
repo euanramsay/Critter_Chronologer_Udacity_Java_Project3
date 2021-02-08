@@ -17,9 +17,6 @@ public class PetService {
     @Autowired
     PetRepository petRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
-
     public List<Pet> findAllPets() {
         return petRepository.findAll();
     }
@@ -34,10 +31,7 @@ public class PetService {
     }
 
     public Pet savePet(Pet pet) {
-        Customer owner = pet.getCustomer();
         petRepository.save(pet);
-        owner.addPet(pet);
-        customerRepository.save(owner);
         return pet;
     }
 }
